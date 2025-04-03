@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        textView = findViewById(R.id.textView)
 
         bindService(
             Intent(this, TimerService::class.java),
@@ -52,11 +52,11 @@ class MainActivity : AppCompatActivity() {
         )
 
         findViewById<Button>(R.id.startButton).setOnClickListener {
-
+            if(isConnected) timerBinder?.start(100)
         }
         
         findViewById<Button>(R.id.stopButton).setOnClickListener {
-
+            if(isConnected) timerBinder?.pause()
         }
     }
 
