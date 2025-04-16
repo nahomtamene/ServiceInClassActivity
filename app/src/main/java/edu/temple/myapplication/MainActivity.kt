@@ -29,11 +29,12 @@ class MainActivity : AppCompatActivity() {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             timerBinder = service as TimerService.TimerBinder
             timerBinder!!.setHandler(timeHanlder)
-
-
             isConnected = true
 
+            val saved = timerBinder?.getSavedTime() ?: 0
+            if (saved > 0) textView.text = "$saved"
         }
+
 
         override fun onServiceDisconnected(name: ComponentName?) {
             isConnected = false
@@ -54,9 +55,15 @@ class MainActivity : AppCompatActivity() {
         )
 
         findViewById<Button>(R.id.startButton).setOnClickListener {
-
+            if (isConnected) {
+                val savedTime = timerBinder?.getSavedTime() ?: 0
+                val startValue = if (savedTime > 0) savedTime else 100
+                timerBinder?.start(startValue)
+            }
         }
-        
+
+
+
         findViewById<Button>(R.id.stopButton).setOnClickListener {
             if(isConnected) timerBinder?.pause()
         }
